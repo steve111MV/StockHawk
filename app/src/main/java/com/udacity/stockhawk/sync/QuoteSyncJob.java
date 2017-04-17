@@ -74,10 +74,25 @@ public final class QuoteSyncJob {
 
                 Stock stock = quotes.get(symbol);
                 StockQuote quote = stock.getQuote();
+                float price = 0;
+                float change = 0;
+                float percentChange=0;
+                try{
+                    price = quote.getPrice().floatValue();
+                }catch (NullPointerException ex){
+                    ex.printStackTrace();
+                }
+                try{
+                    change = quote.getChange().floatValue();
+                }catch (NullPointerException ex){
+                    ex.printStackTrace();
+                }
+                try{
+                    percentChange = quote.getChangeInPercent().floatValue();
+                }catch (NullPointerException ex){
+                    ex.printStackTrace();
+                }
 
-                float price = quote.getPrice().floatValue();
-                float change = quote.getChange().floatValue();
-                float percentChange = quote.getChangeInPercent().floatValue();
 
                 // WARNING! Don't request historical data for a stock that doesn't exist!
                 // The request will hang forever X_x
