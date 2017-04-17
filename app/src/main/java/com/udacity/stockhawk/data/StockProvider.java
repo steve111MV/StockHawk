@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 
 public class StockProvider extends ContentProvider {
@@ -130,11 +131,19 @@ public class StockProvider extends ContentProvider {
 
             case QUOTE_FOR_SYMBOL:
                 String symbol = Contract.Quote.getStockFromUri(uri);
+
+                //NOTE: the fix below consisted on replacing the quote bu apostrophes as TEXT delimiter
+
                 rowsDeleted = db.delete(
-                        Contract.Quote.TABLE_NAME,
-                        '"' + symbol + '"' + " =" + Contract.Quote.COLUMN_SYMBOL,
+                        Contract.Quote.TABLE_NAME, Contract.Quote.COLUMN_SYMBOL +" = '"+symbol+"'",
                         selectionArgs
                 );
+                if(rowsDeleted>0){
+                    Log.i("provider_deleted", rowsDeleted+"");
+                } else {
+
+                    Log.i("provider_deleted", "none, failure");
+                }
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown URI:" + uri);

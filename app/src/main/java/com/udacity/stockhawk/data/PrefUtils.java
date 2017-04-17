@@ -3,6 +3,7 @@ package com.udacity.stockhawk.data;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.udacity.stockhawk.R;
 
@@ -29,11 +30,18 @@ public final class PrefUtils {
         if (!initialized) {
             SharedPreferences.Editor editor = prefs.edit();
             editor.putBoolean(initializedKey, true);
+            editor.apply();
             editor.putStringSet(stocksKey, defaultStocks);
             editor.apply();
             return defaultStocks;
         }
-        return prefs.getStringSet(stocksKey, new HashSet<String>());
+
+        /* StockHawk issue #2
+            i solved the Preference problem. what i understood is that
+            the PreferencesManger didn't definitely store my new settings
+            due to same Object hashCode. so a new instance of the HashSet was the key.
+          */
+        return new HashSet<>(prefs.getStringSet(stocksKey, new HashSet<String>()));
 
     }
 
@@ -41,6 +49,8 @@ public final class PrefUtils {
         String key = context.getString(R.string.pref_stocks_key);
         Set<String> stocks = getStocks(context);
 
+
+        Log.i("pref_size", stocks.size()+"");
         if (add) {
             stocks.add(symbol);
         } else {
@@ -49,6 +59,7 @@ public final class PrefUtils {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = prefs.edit();
+        editor.remove(key);
         editor.putStringSet(key, stocks);
         editor.apply();
     }
