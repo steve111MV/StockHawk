@@ -127,12 +127,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 super.onScrolled(recyclerView, dx, dy);
                 Log.i("fabState"," in onSCrolled, preparing check: "+(40 * phoneDensity)+" -- y="+fabReturnY);
 
-                if(isFabVisible && fabReturnY > 60 *10){
+                if(isFabVisible && fabReturnY > 50 *10){
                     hideFabMenu(300);
                     Log.i("fabState","hidden");
                     isFabVisible = false;
                     fabReturnY = 0;
-                } else if(!isFabVisible && fabReturnY < -60  * 10){
+                } else if(!isFabVisible && fabReturnY < -50  * 10){
                     showFabMenu(300);
                     Log.i("fabState","visible");
                     isFabVisible =true;
