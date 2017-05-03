@@ -37,18 +37,20 @@ public class DetailsAsyncTask extends AsyncTask<String,Object, Object[]> {
     protected Object[] doInBackground(String... params) {
         String stockSymbol = params[0];
 
-        Calendar calendarToday = Calendar.getInstance();
-        Calendar calendarLastYear = Calendar.getInstance();
-        calendarLastYear.add(Calendar.YEAR, -YEARS_OF_HISTORY);
-        Stock stock;
+        Calendar from = Calendar.getInstance();
+        Calendar to = Calendar.getInstance();
+        from.add(Calendar.YEAR, -2); // from 2 years ago
+
+
+
         List<HistoricalQuote> history;
+        Stock stock = null;
         try {
             stock = YahooFinance.get(stockSymbol);
-            history = stock.getHistory(calendarLastYear, calendarToday, Interval.WEEKLY);
-            Log.i("stockS0", stockSymbol);
+            history = stock.getHistory(from, to, Interval.MONTHLY);
+            //Log.i("stockS0", stockSymbol);
         } catch (IOException e) {
             e.printStackTrace();
-            stock = null;
             history = null;
         }
         return new Object[]{stock, history};
